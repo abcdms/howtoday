@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efek Teks & Pop-up Modal</title>
+  
+  <!-- Sertakan library TypeIt -->
+  <script src="https://unpkg.com/typeit@8.7.0/dist/index.umd.js"></script>
+
+  <style>
+    /* Gaya dasar halaman */
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://i.imgur.com/oAe9jOE.jpg') no-repeat center center fixed;
+      background-size: cover;
+      padding: 20px;
+      margin: 0;
+      text-align: center;
+      color: #fff;
+    }
+
+    h1 {
+      color: #ffc0cb;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Kotak teks berjalan */
+    .messageC {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-size: 18px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Tombol modal */
+    .btn-show-modal {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 12px 25px;
+      background: #ffc0cb;
+      color: #fff;
+      font-size: 16px;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-show-modal:hover {
+      background: #d14794;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    /* Kotak Modal */
+    .modal-content {
+      background: #fff;
+      width: 80%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .modal-check-icon {
+      font-size: 48px;
+      color: #ffc0cb;
+      margin-bottom: 10px;
+    }
+
+    .modal-message {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .modal-button {
+      padding: 10px 20px;
+      background: #ffc0cb;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal-button:hover {
+      background: #d14794;
+    }
+
+    /* Kontrol Musik */
+    .music-control {
+      margin-top: 20px;
+    }
+
+    .music-button {
+      padding: 10px 15px;
+      background: #ffc0cb;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .music-button:hover {
+      background: #d14794;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Judul -->
+  <h1>HAII KAMUUU</h1>
+
+  <!-- Elemen teks berjalan -->
+  <p class="messageC"></p>
+
+  <!-- Tombol untuk memunculkan modal -->
+  <button class="btn-show-modal" onclick="showModal()">
+    KALO UDAH SELESAI BACA
+    PENCET INI YAA🙏🙏
+  </button>
+
+  <!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-check-icon">✔️</div>
+      <div class="modal-message">OK! Kirim jawabannya ke WhatsApp aku, ya!</div>
+      <button class="modal-button" onclick="goToWhatsApp()">OK</button>
+    </div>
+  </div>
+
+  <!-- Kontrol Musik -->
+  <div class="music-control">
+    <button class="music-button" onclick="toggleMusic()">🔊 Play/Pause</button>
+  </div>
+
+  <!-- Elemen Audio -->
+  <audio id="backgroundMusic" loop>
+    <source src="https://github.com/abcdms/HAL-L/raw/refs/heads/main/musik%20(1).mp3" type="audio/mp3">
+    Browser kamu tidak mendukung elemen audio.
+  </audio>
+
+  <!-- JavaScript -->
+  <script>
+    // Array teks untuk animasi
+    var teksAnimasi = [
+      "<b>Hai! Gimana harimu hari ini? Semoga semuanya berjalan lancar dan menyenangkan ya. Ada sesuatu yang menarik atau spesial yang terjadi hari ini? Atau mungkin ada hal yang sedikit bikin capek? Apa pun itu, semoga kamu bisa melewatinya dengan baik.",
+      "<br><b>Kalau hari ini terasa berat, jangan lupa istirahat sebentar dan lakukan sesuatu yang bikin kamu senang. Kadang, hal-hal kecil seperti mendengarkan lagu favorit, minum sesuatu yang enak, atau sekadar ngobrol santai bisa bikin suasana hati lebih baik.",
+      "<br><b>Aku harap harimu menyenangkan dan kalau ada yang mau diceritain, aku siap dengerin!",
+    ];
+    
+    // Tunggu sampai DOM siap
+    document.addEventListener("DOMContentLoaded", function() {
+      let instance = new TypeIt(".messageC", {
+        speed: 25,
+        waitUntilVisible: true,
+        lifeLike: true,
+        cursor: true
+      });
+
+      teksAnimasi.forEach((teks, index) => {
+        instance.type(teks);
+        if (index < teksAnimasi.length - 1) {
+          instance.pause(500).break();
+        }
+      });
+
+      instance.go();
+
+      // Mulai musik saat halaman dimuat
+      document.getElementById("backgroundMusic").play();
+    });
+
+    // Fungsi untuk menampilkan modal
+    function showModal() {
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    // Fungsi untuk mengarahkan ke WhatsApp
+    function goToWhatsApp() {
+      var phoneNumber = '6282280204824'; // Ganti dengan nomor tujuan
+      var message = 'haii dimass hari ini aku ....!';
+      var encodedMessage = encodeURIComponent(message);
+      var waUrl = 'https://wa.me/' + phoneNumber + '?text=' + encodedMessage;
+      window.location.href = waUrl;
+    }
+
+    // Fungsi untuk mengontrol musik
+    function toggleMusic() {
+      var music = document.getElementById("backgroundMusic");
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }
+  </script>
+
+</body>
+</html>
